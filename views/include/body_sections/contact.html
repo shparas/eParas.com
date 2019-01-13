@@ -1,0 +1,109 @@
+<div class="text-center text-white section-title">
+	<h2 class="code section-title-text">Contact Me</h2>
+</div>
+<div class="container container-fluid">
+  <div class="row my-5">
+    <div class="col-sm-1 col-md-2 col-lg-3 align-middle"></div>
+    <div class="col-sm-10 col-md-8 col-lg-6 bg-white py-3 my-3 rounded">
+      <div>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <a aria-controls="nav-home" aria-selected="true" class="nav-item nav-link active" data-toggle="tab" href="#messagehere" id="nav-home-tab" role="tab">Message Here</a> <a aria-controls="nav-profile" aria-selected="false" class="nav-item nav-link" data-toggle="tab" href="#contactinfo" id="nav-profile-tab" role="tab">Contact Info</a>
+        </div>
+        <div class="tab-content">
+          <div class="tab-pane fade-in active" id="messagehere">
+            <h3 class="my-4 text-left">
+              Leave a message here?
+            </h3>
+            <form action="/leavemessage" method="post" id="messageform">
+              <input class="form-control px-2 my-1 mt-0" name="fullname" placeholder="Full Name" required type="text"> 
+							<input class="form-control px-2 my-1 mt-0" name="phone" placeholder="Phone (xxx-xxx-xxxx)" required type="text"> 
+							<input class="form-control px-2 my-1 mt-0" name="email" placeholder="Email" required type="email"> 
+							<input class="form-control px-2 my-1 mt-0" name="companyname" placeholder="Company Name" required type="text"> 
+							<input class="form-control px-2 my-1 mt-0" name="address1" placeholder="Company Address" required type="text"> 
+							<textarea name="messageDescription" class="form-control px-2 my-1 mt-0" form="messageform" rows="5" placeholder="Message Body" required></textarea>
+							<input class="btn btn-primary btn px-4 my-2 mb-0" name="action" type="submit" value="Submit" onclick="return submitContact();">
+            </form>
+          </div>
+          <div class="tab-pane fade" id="contactinfo">
+            <h3 class="my-4 text-left">
+              How else can I be reached?
+            </h3>
+            <div>
+							<div class="row my-sm-0 h5">
+								<div class="col-sm-12 col-md my-3 my-md-4">
+									<h4>Email:</h4>
+									<img src="/images/email.png" class="image-icon d-inline-block align-middle">
+									<a href="mailto:mail@eparas.com" target="_blank">mail@eparas.com</a>
+								</div>
+								<div class="col-sm-12 col-md my-3 my-md-4">
+									<h4>Phone:</h4>
+									<img src="/images/phone.png" class="image-icon d-inline-block align-middle">
+									<a href="#" target="" >208-371-0206</a>
+								</div>
+							</div>
+							<div class="row my-sm-0 h5">
+								<div class="col-sm-12 col-md my-3 my-md-4">
+									<h4>Linked-In:</h4>
+									<img src="/images/linkedin2.png" class="image-icon d-inline-block align-middle">
+									<a href="https://www.linkedin.com/in/paras-sharma" target="_blank">paras-sharma</a>
+								</div>
+								<div class="col-sm-12 col-md my-3 my-md-4">
+									<h4>Instagram:</h4>
+									<img src="/images/instagram.png" class="image-icon d-inline-block align-middle">
+									<a href="https://www.instagram.com/parassssh/" target="_blank">parassssh</a>
+								</div>
+							</div>
+						</div>
+          </div>
+        </div>
+      </div>
+    </div>
+		<div class="col-sm-1 col-md-2 col-lg-3"></div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="leave-message-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Success</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Your message has been submitted successfully!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+function submitContact(){
+	var contactFormArr = $("#messageform").serializeArray();
+
+  var sendData = {};
+  for (var i = 0; i < contactFormArr.length; i++)
+    sendData[contactFormArr[i]['name']] = contactFormArr[i]['value'];
+  
+	$.ajax({
+		type: "POST",
+		url: "/leavemessage",
+		data: JSON.stringify(sendData),
+		success: function(){
+			$('#leave-message-modal').modal();
+			$('#messageform').trigger("reset");
+		},
+		dataType: "json",
+		contentType : "application/json"
+	});
+	return false;
+}
+</script>

@@ -1,0 +1,134 @@
+<% 
+var buttons = "";
+var carouselItems = "";
+
+for (var i=0; i < carouselNames.length; i++){
+	buttons += `<li data-target="#media-carousel" data-slide-to="${i}" ${i==0?'class="active"':''}></li>` + `\n					`;
+	
+	var tempName = carouselNames[i];
+	tempName = tempName.split(".");
+	tempName.length = tempName.length>1?tempName.length - 1: tempName.length;
+	tempName = tempName.join(".");
+	tempName = tempName.replace(/_/g, " ");
+	tempName = tempName.split("-");
+	var captionTitle = tempName[0];
+	var captionDesc = (tempName[1] == undefined? "": tempName[1]);
+	
+	
+	carouselItems +=
+					`<div class="carousel-item ${i==0?'active':''}">
+						<img class="d-block w-100" src="/images/carousel/${carouselNames[i]}" alt="First slide">
+						<div class="carousel-caption d-none d-md-block">
+							<h5>${captionTitle}</h5>
+							<p>${captionDesc}</p>
+						</div>
+					</div>
+					`;
+}
+%>
+
+<div class="text-center text-white section-title">
+	<h2 class="code section-title-text">Images</h2>
+</div>
+<div class="container container-fluid rounded my-5">
+	<div class="row border rounded">
+		<div class="col-12 p-0">
+			<div id="media-carousel" class="carousel slide w-100 mx-auto" data-ride="carousel">
+				<ol class="carousel-indicators">
+					<%- buttons %>
+				</ol>
+				<div class="carousel-inner">
+					<%- carouselItems %>
+				</div>
+				<a class="carousel-control-prev" href="#media-carousel" role="button" data-slide="prev">
+					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					<span class="sr-only">Previous</span>
+				</a>
+				<a class="carousel-control-next" href="#media-carousel" role="button" data-slide="next">
+					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					<span class="sr-only">Next</span>
+				</a>
+			</div>
+		</div>
+		<div class="col-12 p-0">
+			<div class="media-images-library text-center" id="library-list">
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="full-screen-image" tabindex="-1" role="dialog" aria-labelledby="full-screen-image-label" aria-hidden="true">
+  <div class="modal-dialog modal-lg full-screen-modal-box-container" role="document">
+    <div class="modal-content bg-dark text-white w-100 full-screen-modal-box">
+      <div class="modal-header">
+        <h5 class="modal-title" id="full-screen-image-label">Image</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" class="text-white">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body bg-black">
+				<div class="full-screen-image-body text-center">
+					<img src="" id="full-screen-image-element" class="mx-auto img-fluid">
+				</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<script>
+function expandDir(dir){
+	var currentPos = dir;
+	$.get("/img_library_content?at=" + currentPos, function(data){
+		var data = JSON.parse(data);
+		var dirs = data.dirs;
+		var files = data.files;
+		
+		var allDir = "";
+		if (currentPos != ""){
+			var back = currentPos.split("/");
+			back.length = back.length-1;
+			back = back.join("/");
+			allDir = '<div class="my-2 mx-1" onclick="expandDir(\''+back+'\');"><img src="/images/back.png" class="img-responsive bg-none"></div>';
+		}
+		for (var i = 0; i < dirs.length; i++){
+			var tempName = breakNames(dirs[i]);
+			
+			allDir += '<div class="my-2 mx-1" onclick="expandDir(\''+currentPos+"/"+dirs[i]+'\');"><img src="/images/dir.png" class="img-responsive rounded img-thumbnail bg-none">' + '<div class="media-images-library-caption text-center">'+tempName.title+'</div></div>';
+		}
+		for (var i = 0; i < files.length; i++){
+			var tempName = breakNames(files[i]);
+			allDir += '<div class="my-2 mx-1" onclick="fullScreen(\''+currentPos+"/"+files[i]+'\');"><img src="/images/library'+currentPos+"/"+files[i]+'" class="img-responsive rounded img-thumbnail">' + '<div class="media-images-library-caption text-center">'+tempName.title+'</div></div>';
+		}
+		document.getElementById("library-list").innerHTML = allDir;
+	});
+}
+function breakNames(str){
+	var tempName = str;
+	tempName = tempName.split(".");
+	tempName.length = tempName.length>1?tempName.length - 1: tempName.length;
+	tempName = tempName.join(".");
+	tempName = tempName.replace(/_/g, " ");
+	tempName = tempName.split("-");
+	var captionTitle = tempName[0];
+	var captionDesc = (tempName[1] == undefined? "": tempName[1]);
+	return { title: captionTitle, description: captionDesc };
+}
+function pathToName(str){
+	var temp = str.split("/");
+	return temp[temp.length-1];
+}
+function fullScreen(path){
+	document.getElementById("full-screen-image-element").src="/images/library/"+path;
+	var info =  breakNames(pathToName(path));
+	document.getElementById("full-screen-image-label").innerHTML = info.title + ' <small class="text-light">'+info.description+'</small>'
+	$('#full-screen-image').modal();
+}
+expandDir("");
+</script>

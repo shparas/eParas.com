@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Stuffs for bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<!-- Stuffs good to have -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"> <!-- initial zoom level when page is first loaded. -->
+<!-- My Stuffs -->
+	<link rel="stylesheet" href="/styles/main.css">
+	<script src="/scripts/main.js"></script>
+	<title>Summary</title>
+</head>
+<body lang="en-US">
+<div class="pageheader" style="background-image: url('/pageheader.jpg'); background-repeat: no-repeat; b ">
+	<div>
+		<h1 class="text-center bg-none text-white" style="font-size:3em;">Merry Christmas!</h1>
+	</div>
+</div>
+<div>
+	<div class="container container-fluid">
+		<div class="row">
+			<div class="col my-1">
+				<a href="/" class="btn btn-success m-1" role="button">Home</a>
+				<a href="/write.html" class="btn btn-success m-1" role="button">Write Wishes</a>
+				<a href="/view.html" class="btn btn-success m-1 active disabled" role="button">View Wishes</a>
+				<a href="/changepass.html" class="btn btn-success m-1" role="button">Change Password</a>
+				<a href="/signout.html" class="btn btn-success m-1 bg-danger" role="button">Sign Out</a>
+			</div>
+		</div>
+		<div class="row mt-5">
+			<div class="col">
+				<h1 class="text-white text-center mx-auto">Summary</h1>
+			</div>
+		</div>
+		<div class="row mt-5">
+			<div class="col">			
+				<form action="/write.html" method="post" id="message-form">
+					<div id="form-body" class="row">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script>	
+	function validateMessages(emptyMessageAlerted){
+		var msgs=[];
+		var noMsgNames = [];
+		for (var i=0; i<messages.length; i++){
+			var msg = document.getElementById("selected"+i).value;
+			msgs.push(msg);
+		}
+		$.ajax({
+				  type: "POST",
+				  url: "/view.html",
+				  data: JSON.stringify(msgs),
+				  success: function(){window.location.replace("/dash.html");},
+				  dataType: "json",
+				  contentType : "application/json"
+				});
+				return false;
+	}	
+	
+	
+	function getMessages(){
+		$.get("/gotwishes.json", function(data){
+			messages = JSON.parse(data); 
+			console.log(messages.length);
+			proceed();
+		});
+	}
+	function getMembers(){
+		$.get("/summary.json", function(data){
+			names = JSON.parse(data);
+			getMessages();
+		});
+	}
+	var fname = "";
+	var names = [];
+	var messages = [];
+	getMembers();
+	
+	function proceed(){
+	  var selectOptions = ""; // + names.join("</option><option>") + "</option>";
+	  for (var n =0; n <names.length; n++){
+		selectOptions += `<option value='${names[n]}'>${names[n]}</option>`;
+	  }
+	  selectOptions += "</option>";
+	  for (var n = 0; n < messages.length; n++){
+			var formElement = `
+			
+			  <div class="col-sm-12 col-lg-6 p-2">
+				<div class="form-part">
+				  <div class="m-0 form-group row p-0">
+					<span class="font-weight-bold">${typeof names[n]==="undefined"?"You didn't select any!":names[n]}</span>
+				  </div>
+				  <div class="m-0 form-group">
+					<div>
+					  <textarea readonly class="form-control" rows="5" id="message${n}" name="message${n}" placeholder="Message">${messages[n]}</textarea>
+					</div>
+				  </div>
+				</div>
+			  </div>
+			  `;
+			document.getElementById("form-body").innerHTML+=formElement;
+		}
+	}
+</script>
+
+
+
+
+
+
+
+
+<!-- React things go here -- s>
+<script src = "/socket.io/socket.io.js"></script>
+<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Launch demo modal
+</button>
+
+
+ -->
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<div class="bodyfooter">
+	<script>
+		function footerChange(){
+			var text = ["© Paras Humagain 2018", "All rights reserved"];
+			var colors = ["white", "green", "#aaffaa", "black", "#ffaaaa", "#ccccff", "white", "white", "green", "red", "black"]; // red, green, blue
+			var box = document.getElementsByClassName("bodyfooter")[0]
+			box.innerHTML=""; //&copy;";
+			for (var i1 = 0; i1 < text.length; i1++){
+				for (var i2 = 0; i2 < text[i1].length; i2++){
+					var color1 = Math.floor(Math.random() * 255);
+					var color2 = Math.floor(Math.random() * 255);
+					var color3 = Math.floor(Math.random() * 100);
+					box.innerHTML += "<span style=\"color:rgb(" + color1 +',' + color2 + "," + color3 + ");\">" + text[i1][i2] + "</span>";
+				}
+				if (i1 != text.length-1) box.innerHTML += "<br>";
+			}
+		}
+		var footerChanger = setInterval(footerChange,1000);
+	</script>
+</div>
+</body>
+</html>

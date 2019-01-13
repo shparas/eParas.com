@@ -1,0 +1,35 @@
+<div class="pageheader">
+	<div>
+		<div class="container container-fluid">
+			<div class="row">
+				<div class="col col-md-9 col-lg-7 mx-auto text-white">
+					<h1 class="handwriting display-3 text-center">eParas.com</h1>
+					<p class="small code" id="header-write-container" contenteditable="false"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+function typeForward(){
+	function write(){
+		var time = 50;
+		if (pos < str.length){
+			pos++;
+			container.innerHTML = str.substr(0, pos) + '<span class="blink">_</span></h1>';
+			if (str[pos] == '<'){
+				if (str[pos+1] != "/") time = 1100;
+				pos = str.indexOf(">", pos);
+			}
+			setTimeout(write, time)
+		}
+	}
+	var str = " - Official website of Paras Sharma (Humagain)<br>Currently under construction. All contents aren't available and some features may misbehave.<br>Your feedback matters! Please leave a message <a href='#section5'>here</a>.<br><br>P.S. Good to see you!";
+	
+	var container = document.getElementById("header-write-container");
+	container.innerHTML = "";
+	var pos = 0;
+	write();
+}
+typeForward();
+</script>

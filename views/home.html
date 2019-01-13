@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include("include/head.html", {title: "Home"}); %>
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="100" onload="bodyOnLoad();">
+<%- include("include/navbar.html"); %>
+<div class="page-header">
+	<%- include("include/body_header_1.html"); %>
+</div>
+<div class="section-breaker"></div>
+<div id="section1" class="container-fluid page-section">
+	<%- include("include/body_sections/projects.html"); %>
+</div>
+<div class="section-breaker"></div>
+<div id="section2" class="container-fluid page-section bg-success">
+	<%- include("include/body_sections/images.html", {carouselNames: carouselNames}); %>
+</div>
+<div class="section-breaker"></div>
+<div id="section3" class="container-fluid page-section">
+	<%- include("include/body_sections/blogs.html"); %>
+</div>
+<div class="section-breaker"></div>
+<div id="section4" class="container-fluid page-section bg-success">
+	<%- include("include/body_sections/fileservices.html"); %>
+</div>
+<div class="section-breaker"></div>
+<div id="section5" class="container-fluid page-section text-dark">
+	<%- include("include/body_sections/contact.html"); %>
+</div>
+<%- include("include/body_footer_1.html"); %>
+<%- include("include/body_end_stuffs.html"); %>
+</body>
+</html>

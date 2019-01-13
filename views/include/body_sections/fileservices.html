@@ -1,0 +1,76 @@
+<div class="text-center text-white section-title">
+	<h2 class="code section-title-text">File Services</h2>
+</div>
+
+<div class="container container-fluid ">
+  <div class="row my-5">
+    <div class="col-sm-1 col-md-2 col-lg-3 align-middle"></div>
+    <div class="col-sm-10 col-md-8 col-lg-6 bg-white py-3 my-3 rounded">
+      <div>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <a aria-controls="nav-home" aria-selected="true" class="nav-item nav-link active" data-toggle="tab" href="#pickup" id="nav-home-tab" role="tab">Pickup</a> <a aria-controls="nav-profile" aria-selected="false" class="nav-item nav-link" data-toggle="tab" href="#dropoff" id="nav-profile-tab" role="tab">Dropoff</a>
+        </div>
+        <div class="tab-content">
+          <div class="tab-pane fade-in active" id="pickup">
+            <h3 class="my-4 text-left">
+              Pickup
+            </h3>
+            <form action="/pick_file" method="post" id="pick-file">
+              <input id="pickup-id" class="form-control px-2 my-1 mt-0" name="fileorpersonid" placeholder="ID" required type="text"> 
+							<input class="btn btn-primary btn px-4 my-2 mb-0" name="action" type="submit" value="Next" onclick="fileFetch(); return false;">
+            </form>
+						<div class="pickup-files-container py-2">
+						</div>
+          </div>
+          <div class="tab-pane fade" id="dropoff">
+            <h3 class="my-4 text-left">
+              Dropoff
+            </h3>
+						<form action="/put_file" method="post" id="drop-file" enctype="multipart/form-data">
+              <input class="form-control px-2 my-1 mt-0" name="fileorpersonid" placeholder="File ID (4-10 characters)" required type="text">
+							<div class="custom-file">
+								<input type="file" class="custom-file-input" id="validatedCustomFile" name="fileUpload" onchange="fileInputChange();">
+								<label class="custom-file-label task-attachment-label" for="validatedCustomFile">File</label>
+							</div>
+              <textarea name="fileDesc" class="form-control px-2 my-1 mt-0" form="drop-file" rows="5" placeholder="File Description" required></textarea>
+							<input class="btn btn-primary btn px-4 my-2 mb-0" name="action" type="submit" value="Next">
+            </form>
+						</div>
+          </div>
+        </div>
+      </div>
+    </div>
+		<div class="col-sm-1 col-md-2 col-lg-3"></div>
+  </div>
+</div>
+
+<script>
+function fileInputChange(){
+	$("input[name='fileUpload']").each(function() {
+			var fileName = $(this).val().split('/').pop().split('\\').pop();
+			var label = "File (if available)";
+			if (fileName !== "")
+				label = fileName;
+			$(".task-attachment-label").html(label);
+	});
+}
+// Getting file from ID
+function fileFetch(){
+	var id = document.getElementById('pickup-id').value;
+	if (id == "") return false;
+	
+	$.get("/get_file_list?id=" + id, function(data){
+		var message = JSON.parse(data);
+		var buttons = "";
+		for (var i=0; i < message.length; i++){
+			buttons += "<a href='/get_file_from_id_name?id="+id+"&name="+message[i]+"' class='btn btn-success btn-sm m-1' role='button' aria-pressed='true' target='_blank'>" + decodeURI(message[i]) + "</a>";
+		}
+		$(".pickup-files-container").html(buttons);
+		console.log(message);
+	});
+}
+
+
+
+
+</script>

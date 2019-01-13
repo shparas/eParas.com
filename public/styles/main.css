@@ -204,6 +204,7 @@ body{
 .section-breaker{
 	height:20px;
 	width: 400px;
+	max-width:95%;
 	border:solid white 5px;
 	border-top: none;
 	border-left:;

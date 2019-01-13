@@ -34,6 +34,13 @@ if (logLocal == true) {
 	});
 }
 
+//allowing cors for *.eparas.com
+router.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*.eparas.com");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // serving static files from public directory (syles, scripts, images, file...)
 router.use(express.static(`${cwd}/public`));
 

@@ -111,7 +111,7 @@ router.get("/img_library_content", (req, res) => {
 		res.status(404).send('Content not found!');
 		return;
 	}
-	console.log(pos);
+	//console.log(pos);
 	readDir(publicDir+"/images/library/"+pos, (err, dirContent)=>{
 		if (err) throw err;
 		res.status(200).send(JSON.stringify(dirContent));

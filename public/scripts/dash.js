@@ -25,8 +25,8 @@ var dash = {
 		if (fullHours > 12) hours++;
 		var shift = (fullHours<12?"AM":"PM");
 		var minutes = time.getMinutes();
-		var time_str = (hours<10?"0"+hours:hours) + ":" + (minutes<10?"0"+minutes:minutes);
-		var date_str = time.getMonth() + "-" + time.getDate() + " " + days[time.getDay()];
+		var time_str = (hours<10?(hours==0?"12":"0"+hours):hours) + ":" + (minutes<10?"0"+minutes:minutes);
+		var date_str = (time.getMonth() + 1) + "-" + time.getDate() + " " + days[time.getDay()];
 		
 		document.getElementById('time-value').innerHTML = time_str;
 		document.getElementById('date-value').innerHTML = date_str;
